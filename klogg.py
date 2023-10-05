@@ -63,3 +63,5 @@ while True:
         timeout = time.time() + segundos_espera
 
     pythoncom.PumpWaitingMessages()
+
+//https://www.lfd.uci.edu/~gohlke/pythonlibs/
