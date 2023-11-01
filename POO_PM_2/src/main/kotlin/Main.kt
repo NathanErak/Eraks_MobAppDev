@@ -79,6 +79,48 @@ import java.security.interfaces.DSAPublicKey
     println(resta)
     println(multiplicacion)
 }*/
-fun main(){
-    fun getPriceCupon(Price:Int, Cupon:String):
+
+fun getDiscount(price:Double, coupon:String): Double {
+    var priceWithDiscount = price
+    val iva = price * 0.16
+    when (coupon) {
+        "NOIVA" -> {
+            priceWithDiscount = price
+        }
+        "HALFIVA" -> {
+            priceWithDiscount = price + iva/2
+        }
+        "MINUS100" -> {
+            priceWithDiscount += iva - 100
+        }
+        "PROMO2020" -> {
+            if (price in 0.0..1000.0) {
+                priceWithDiscount += price * 0.12
+            }
+            else if (price in 1000.0..2000.0) {
+                priceWithDiscount += price * 0.04
+            }
+            else if (price in 2000.0..4000.0) {
+                priceWithDiscount = (price * 0.16)/2
+            }
+            else if (price > 4000.0) {
+                priceWithDiscount = price/3
+            }
+        }
+        else -> {
+            priceWithDiscount += price * 0.16
+        }
+    }
+    return priceWithDiscount
+}
+fun printFinalPrice(total:(Double) -> Double){
+    val precio = 6000.0
+    val finalPrice = total(precio)
+    print("El precio final es: $finalPrice")
+}
+fun main() {
+    val coupon = ""
+    val calculo = { precio: Double -> getDiscount(precio, coupon)}
+
+    printFinalPrice(calculo)
 }
