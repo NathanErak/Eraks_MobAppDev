@@ -80,47 +80,29 @@ import java.security.interfaces.DSAPublicKey
     println(multiplicacion)
 }*/
 
-fun getDiscount(price:Double, coupon:String): Double {
-    var priceWithDiscount = price
-    val iva = price * 0.16
-    when (coupon) {
-        "NOIVA" -> {
-            priceWithDiscount = price
-        }
-        "HALFIVA" -> {
-            priceWithDiscount = price + iva/2
-        }
-        "MINUS100" -> {
-            priceWithDiscount += iva - 100
-        }
-        "PROMO2020" -> {
-            if (price in 0.0..1000.0) {
-                priceWithDiscount += price * 0.12
+fun getDiscount(price: Double, coupon: String, calculateDiscount: (Double, String) -> Double): Double {
+    return calculateDiscount(price, coupon)
+}
+
+fun main() {
+    val coupon = "PROMO2020"
+    val precio = 100.0
+
+    val discountCalculator: (Double, String) -> Double = { price, coupon ->
+        when (coupon) {
+            "NOIVA" -> price
+            "HALFIVA" -> price + price * 0.16 / 2
+            "MINUS100" -> price - 100
+            "PROMO2020" -> when {
+                price <= 1000 -> price - price * 0.12
+                price <= 2000 -> price - price * 0.04
+                price <= 4000 -> price * 0.16 / 2
+                else -> price / 3
             }
-            else if (price in 1000.0..2000.0) {
-                priceWithDiscount += price * 0.04
-            }
-            else if (price in 2000.0..4000.0) {
-                priceWithDiscount = (price * 0.16)/2
-            }
-            else if (price > 4000.0) {
-                priceWithDiscount = price/3
-            }
-        }
-        else -> {
-            priceWithDiscount += price * 0.16
+            else -> price + price * 0.16
         }
     }
-    return priceWithDiscount
-}
-fun printFinalPrice(total:(Double) -> Double){
-    val precio = 6000.0
-    val finalPrice = total(precio)
-    print("El precio final es: $finalPrice")
-}
-fun main() {
-    val coupon = ""
-    val calculo = { precio: Double -> getDiscount(precio, coupon)}
 
-    printFinalPrice(calculo)
+    val finalPrice = getDiscount(precio, coupon, discountCalculator)
+    println("El precio final es: $finalPrice")
 }
